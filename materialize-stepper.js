@@ -166,8 +166,8 @@ $.fn.openStep = function(step, callback) {
    step = this.find('.step:visible:eq('+step_num+')');
    if(step.hasClass('active')) return;
    var active = this.find('.step.active');
-   var next;
-   var prev_active = next = $(this.children('.step:visible')).index($(active));
+   var prev_active = $(this.children('.step:visible')).index($(active));
+   var next = prev_active;
    var order = step_num > prev_active ? 1 : 0;
    if(active.hasClass('feedbacking')) $this.destroyFeedback();
    active.closeAction(order);
@@ -182,7 +182,7 @@ $.fn.openStep = function(step, callback) {
 $.fn.closeAction = function(order, callback) {
    var closable = this.removeClass('active').find('.step-content');
    if(window.innerWidth < 993 || !this.closest('ul').hasClass('horizontal')) {
-      closable.stop().slideUp(300,"easeOutQuad", callback);
+      closable.stop().slideUp(300,"swing", callback);
    } else {
       if(order==1) {
          closable.animate({left: '-100%'},function(){closable.css({display: 'none', left: '0%'}, callback);});
@@ -195,7 +195,7 @@ $.fn.closeAction = function(order, callback) {
 $.fn.openAction = function(order, callback) {
    var openable = this.removeClass('done').addClass('active').find('.step-content');
    if(window.innerWidth < 993 || !this.closest('ul').hasClass('horizontal')) {
-      openable.slideDown(300,"easeOutQuad", callback);
+      openable.slideDown(300,"swing", callback);
    } else {
       if(order==1) {
          openable.css({left: '100%', display: 'block'}).animate({left: '0%'}, callback);
@@ -224,7 +224,7 @@ $.fn.activateStepper = function(options) {
       if(!$stepper.parents("form").length && settings.autoFormCreation) {
          var method = $stepper.data('method');
          var action = $stepper.data('action');
-         var method = (method ? method : "GET");
+         method = (method ? method : "GET");
          action = (action ? action : "?");
          $stepper.wrap( '<form action="'+action+'" method="'+method+'"></form>' );
       }
@@ -238,7 +238,7 @@ $.fn.activateStepper = function(options) {
          var object = $($stepper.children('.step:visible')).index($(this));
          if($stepper.data('settings').parallel && validation) { // Invoke parallel stepper behaviour
             $(this).addClass('temp-active');
-            $stepper.validatePreviousSteps()
+            $stepper.validatePreviousSteps();
             $stepper.openStep(object + 1);
             $(this).removeClass('temp-active');
          } else if(!$stepper.hasClass('linear')) {
